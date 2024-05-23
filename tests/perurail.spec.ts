@@ -222,3 +222,52 @@ test('Compra Normal sin num doc', async ({ page }) => {
   await expect(errorLocator).toBeVisible();
 
 });
+
+
+test('Compra por busqueda', async ({page}) =>{
+
+  await page.getByLabel('FromCity of').selectOption('6022');
+  await page.getByLabel('ToArequipaMachuPicchuPuno').selectOption('6026');
+  await page.locator('#countParentsChildren').click();
+  await page.locator('#btnRemoveAdult').click();
+  await page.getByRole('link', { name: 'X', exact: true }).click();
+  const page1Promise = page.waitForEvent('popup');
+  await page.getByRole('button', { name: 'SEARCH' }).click();
+  const page1 = await page1Promise;
+  // await page1.getByRole('button', { name: '-' }).first().click();
+  // await page1.getByRole('button', {name: 'SEARCH'}).click()
+  await page1.locator('#servicio_ida').getByRole('cell', { name: 'PeruRail Expedition 33 ' }).click();
+  await page1.getByRole('cell', { name: 'PeruRail Vistadome Observatory 603 ' }).click();
+  await page1.getByRole('cell', { name: 'Belmond Hiram Bingham 12 W ' }).click();
+  await page1.getByRole('cell', { name: 'PeruRail Vistadome 84 ' }).click();
+  await page1.getByRole('button', { name: 'CONTINUE ' }).click();
+  await page1.locator('#item_NombrePax_1').click();
+  await page1.locator('#item_NombrePax_1').fill('ivan');
+  await page1.locator('#item_NombrePax_1').press('Tab');
+  await page1.locator('#item_ApellidoPax_1').fill('castro');
+  await page1.locator('#item_ApellidoPax_1').press('Tab');
+  await page1.getByLabel('Select').first().click();
+  await page1.locator('input[type="search"]').click();
+  await page1.locator('input[type="search"]').fill('usa');
+  await page1.getByRole('treeitem', { name: 'UNITED STATES OF A.| USA' }).click();
+  await page1.getByLabel('Identification document').click();
+  await page1.getByRole('treeitem', { name: 'Passport' }).click();
+  await page1.locator('#item_NroDocumentoPax_1').click();
+  await page1.locator('#item_NroDocumentoPax_1').fill('1234567789');
+  await page1.locator('#item_NacimientoPax_1').click();
+  await page1.getByRole('cell', { name: '«' }).click();
+  await page1.getByText('2001').click();
+  await page1.getByText('Jun').click();
+  await page1.getByRole('cell', { name: '21' }).click();
+  await page1.getByPlaceholder('345 678').click();
+  await page1.getByPlaceholder('345 678').fill('51902901382');
+  await page1.getByPlaceholder('345 678').press('Tab');
+  await page1.locator('#item_EmailPax_1').fill('prueba@gmail.com');
+  await page1.locator('#item_EmailPax_1').press('Alt+@');
+  await page1.locator('#item_EmailPax_Confirm_1').click();
+  await page1.locator('#item_EmailPax_Confirm_1').fill('prueba@gmail.com');
+  await page1.locator('#DatosComunicacion_1 > div:nth-child(4) > .form-group > .mt-checkbox > span').click();
+  await page1.getByRole('button', { name: 'CONTINUE ' }).click(); 
+  //await page.locator('div').filter({ hasText: '2 SUMMARY OF YOUR PURCHASE' }).nth(3).click();
+
+})
