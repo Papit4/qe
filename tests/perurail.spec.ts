@@ -1,5 +1,8 @@
 import { test, expect } from '@playwright/test';
 
+import {NavigationPage} from '../PageObjects/NavigationPage'
+import {Form} from '../PageObjects/Form'
+
 test.beforeEach(async ({ page }) => {
   // Navegar a la página principal de PeruRail
   await page.goto('https://www.perurail.com/');
@@ -59,215 +62,84 @@ Quantity: 1 per person
 
 });
 
+test('Compra normal con pageobject', async ({page})=>{
+  const navigate = new NavigationPage(page);
+  const newPage = await navigate.SearchTravel();
+  
+  const form = new Form(newPage);
+  await form.CompletingForm("ivan", "castro", "123456", 
+  "usa", "Passport", "912345678", "prueba@gmail.com", "prueba@gmail.com", "female");
 
+})
 
+test('compra nomral sin nombre', async({page})=>{
+  const navigate = new NavigationPage(page);
+  const newPage= await navigate.SearchTravel()
+  const form = new Form(newPage)
 
-test('Compra Normal', async ({ page }) => {
-  const page1Promise = page.waitForEvent('popup');
-  await page.locator('.elementor-button').first().click();
-  const page1 = await page1Promise;
-  await page1.getByRole('button', { name: '-' }).first().click();
-  await page1.getByRole('button', {name: 'SEARCH'}).click()
-  await page1.waitForTimeout(5000)
-  await page1.locator('#servicio_ida').getByRole('cell', { name: 'PeruRail Expedition 33 ' }).click();
-  await page1.getByRole('cell', { name: 'PeruRail Vistadome Observatory 603 ' }).click();
-  await page1.getByRole('cell', { name: 'Belmond Hiram Bingham 12 W ' }).click();
-  await page1.getByRole('cell', { name: 'PeruRail Vistadome 84 ' }).click();
-  await page1.getByRole('button', { name: 'CONTINUE ' }).click();
-  await page1.locator('#item_NombrePax_1').click();
-  await page1.locator('#item_NombrePax_1').fill('ivan');
-  await page1.locator('#item_NombrePax_1').press('Tab');
-  await page1.locator('#item_ApellidoPax_1').fill('castro');
-  await page1.locator('#item_ApellidoPax_1').press('Tab');
-  await page1.getByLabel('Select').first().click();
-  await page1.locator('input[type="search"]').click();
-  await page1.locator('input[type="search"]').fill('usa');
-  await page1.getByRole('treeitem', { name: 'UNITED STATES OF A.| USA' }).click();
-  await page1.getByLabel('Identification document').click();
-  await page1.getByRole('treeitem', { name: 'Passport' }).click();
-  await page1.locator('#item_NroDocumentoPax_1').click();
-  await page1.locator('#item_NroDocumentoPax_1').fill('1234567789');
-  await page1.locator('#item_NacimientoPax_1').click();
-  await page1.getByRole('cell', { name: '«' }).click();
-  await page1.getByText('2001').click();
-  await page1.getByText('Jun').click();
-  await page1.getByRole('cell', { name: '21' }).click();
-  await page1.getByPlaceholder('345 678').click();
-  await page1.getByPlaceholder('345 678').fill('51902901382');
-  await page1.getByPlaceholder('345 678').press('Tab');
-  await page1.locator('#item_EmailPax_1').fill('prueba@gmail.com');
-  await page1.locator('#item_EmailPax_1').press('Alt+@');
-  await page1.locator('#item_EmailPax_Confirm_1').click();
-  await page1.locator('#item_EmailPax_Confirm_1').fill('prueba@gmail.com');
-  await page1.locator('#DatosComunicacion_1 > div:nth-child(4) > .form-group > .mt-checkbox > span').click();
-  await page1.getByRole('button', { name: 'CONTINUE ' }).click(); 
-  //await page.locator('div').filter({ hasText: '2 SUMMARY OF YOUR PURCHASE' }).nth(3).click();
-});
+  await form.CompletingForm("", "castro", "123456", 
+  "usa", "Passport", "912345678", "prueba@gmail.com", "prueba@gmail.com", "female");
 
+  await form.verifyErrorMessage("nombre");
 
-test('Compra Normal sin pais', async ({ page }) => {
-  const page1Promise = page.waitForEvent('popup');
-  await page.locator('.elementor-button').first().click();
-  const page1 = await page1Promise;
-  await page1.getByRole('button', { name: '-' }).first().click();
-  await page1.getByRole('button', {name: 'SEARCH'}).click()
-  await page1.waitForTimeout(5000)
-  await page1.locator('#servicio_ida').getByRole('cell', { name: 'PeruRail Expedition 33 ' }).click();
-  await page1.getByRole('cell', { name: 'PeruRail Vistadome Observatory 603 ' }).click();
-  await page1.getByRole('cell', { name: 'Belmond Hiram Bingham 12 W ' }).click();
-  await page1.getByRole('cell', { name: 'PeruRail Vistadome 84 ' }).click();
-  await page1.getByRole('button', { name: 'CONTINUE ' }).click();
-  await page1.locator('#item_NombrePax_1').click();
-  await page1.locator('#item_NombrePax_1').fill('ivan');
-  await page1.locator('#item_NombrePax_1').press('Tab');
-  await page1.locator('#item_ApellidoPax_1').fill('castro');
-  await page1.locator('#item_ApellidoPax_1').press('Tab');
-  await page1.getByLabel('Select').nth(1).click();
-  await page1.getByRole('treeitem', { name: 'Passport' }).click();
-  await page1.locator('#item_NroDocumentoPax_1').click();
-  await page1.locator('#item_NroDocumentoPax_1').fill('1234567789');
-  await page1.locator('#item_NacimientoPax_1').click();
-  await page1.getByRole('cell', { name: '«' }).click();
-  await page1.getByText('2001').click();
-  await page1.getByText('Jun').click();
-  await page1.getByRole('cell', { name: '21' }).click();
-  await page1.getByPlaceholder('345 678').click();
-  await page1.getByPlaceholder('345 678').fill('51902901382');
-  await page1.getByPlaceholder('345 678').press('Tab');
-  await page1.locator('#item_EmailPax_1').fill('prueba@gmail.com');
-  await page1.locator('#item_EmailPax_1').press('Alt+@');
-  await page1.locator('#item_EmailPax_Confirm_1').click();
-  await page1.locator('#item_EmailPax_Confirm_1').fill('prueba@gmail.com');
-  await page1.locator('#DatosComunicacion_1 > div:nth-child(4) > .form-group > .mt-checkbox > span').click();
-  await page1.getByRole('button', { name: 'CONTINUE ' }).click(); 
-  const errorLocator = await page1.locator('#item_NacionalidadPax_1-error');
-  await expect(errorLocator).toBeVisible();
+})
 
-});
+test('compra nomral sin apellido', async({page})=>{
+  const navigate = new NavigationPage(page);
+  const newPage= await navigate.SearchTravel()
+  const form = new Form(newPage)
 
-test('Compra Normal sin nombre y apellido', async ({ page }) => {
-  const page1Promise = page.waitForEvent('popup');
-  await page.locator('.elementor-button').first().click();
-  const page1 = await page1Promise;
-  await page1.getByRole('button', { name: '-' }).first().click();
-  await page1.getByRole('button', {name: 'SEARCH'}).click()
-  await page1.locator('#servicio_ida').getByRole('cell', { name: 'PeruRail Expedition 33 ' }).click();
-  await page1.getByRole('cell', { name: 'PeruRail Vistadome Observatory 603 ' }).click();
-  await page1.getByRole('cell', { name: 'Belmond Hiram Bingham 12 W ' }).click();
-  await page1.getByRole('cell', { name: 'PeruRail Vistadome 84 ' }).click();
-  await page1.getByRole('button', { name: 'CONTINUE ' }).click();
-  await page1.locator('#item_NombrePax_1').click();
-  await page1.getByLabel('Select').first().click();
-  await page1.locator('input[type="search"]').click();
-  await page1.locator('input[type="search"]').fill('usa');
-  await page1.getByRole('treeitem', { name: 'UNITED STATES OF A.| USA' }).click();
-  await page1.getByLabel('Identification document').click();
-  await page1.getByRole('treeitem', { name: 'Passport' }).click();
-  await page1.locator('#item_NroDocumentoPax_1').click();
-  await page1.locator('#item_NroDocumentoPax_1').fill('1234567789');
-  await page1.locator('#item_NacimientoPax_1').click();
-  await page1.getByRole('cell', { name: '«' }).click();
-  await page1.getByText('2001').click();
-  await page1.getByText('Jun').click();
-  await page1.getByRole('cell', { name: '21' }).click();
-  await page1.getByPlaceholder('345 678').click();
-  await page1.getByPlaceholder('345 678').fill('51902901382');
-  await page1.getByPlaceholder('345 678').press('Tab');
-  await page1.locator('#item_EmailPax_1').fill('prueba@gmail.com');
-  await page1.locator('#item_EmailPax_1').press('Alt+@');
-  await page1.locator('#item_EmailPax_Confirm_1').click();
-  await page1.locator('#item_EmailPax_Confirm_1').fill('prueba@gmail.com');
-  await page1.locator('#DatosComunicacion_1 > div:nth-child(4) > .form-group > .mt-checkbox > span').click();
-  await page1.getByRole('button', { name: 'CONTINUE ' }).click(); 
-  const errorLocator = await page1.locator('#item_NombrePax_1-error');
-  await expect(errorLocator).toBeVisible();
+  await form.CompletingForm("ivan", "", "123456", 
+  "usa", "Passport", "912345678", "prueba@gmail.com", "prueba@gmail.com", "female");
 
-});
+  await form.verifyErrorMessage("apellido");
 
-test('Compra Normal sin num doc', async ({ page }) => {
-  const page1Promise = page.waitForEvent('popup');
-  await page.locator('.elementor-button').first().click();
-  const page1 = await page1Promise;
-  await page1.getByRole('button', { name: '-' }).first().click();
-  await page1.getByRole('button', {name: 'SEARCH'}).click()
-  await page1.locator('#servicio_ida').getByRole('cell', { name: 'PeruRail Expedition 33 ' }).click();
-  await page1.getByRole('cell', { name: 'PeruRail Vistadome Observatory 603 ' }).click();
-  await page1.getByRole('cell', { name: 'Belmond Hiram Bingham 12 W ' }).click();
-  await page1.getByRole('cell', { name: 'PeruRail Vistadome 84 ' }).click();
-  await page1.getByRole('button', { name: 'CONTINUE ' }).click();
-  await page1.locator('#item_NombrePax_1').click();
-  await page1.locator('#item_NombrePax_1').fill('ivan');
-  await page1.locator('#item_NombrePax_1').press('Tab');
-  await page1.locator('#item_ApellidoPax_1').fill('castro');
-  await page1.locator('#item_ApellidoPax_1').press('Tab');
-  await page1.getByLabel('Select').first().click();
-  await page1.locator('input[type="search"]').click();
-  await page1.locator('input[type="search"]').fill('usa');
-  await page1.getByRole('treeitem', { name: 'UNITED STATES OF A.| USA' }).click();
-  await page1.locator('#item_NacimientoPax_1').click();
-  await page1.getByRole('cell', { name: '«' }).click();
-  await page1.getByText('2001').click();
-  await page1.getByText('Jun').click();
-  await page1.getByRole('cell', { name: '21' }).click();
-  await page1.getByPlaceholder('345 678').click();
-  await page1.getByPlaceholder('345 678').fill('51902901382');
-  await page1.getByPlaceholder('345 678').press('Tab');
-  await page1.locator('#item_EmailPax_1').fill('prueba@gmail.com');
-  await page1.locator('#item_EmailPax_1').press('Alt+@');
-  await page1.locator('#item_EmailPax_Confirm_1').click();
-  await page1.locator('#item_EmailPax_Confirm_1').fill('prueba@gmail.com');
-  await page1.locator('#DatosComunicacion_1 > div:nth-child(4) > .form-group > .mt-checkbox > span').click();
-  await page1.getByRole('button', { name: 'CONTINUE ' }).click(); 
-  const errorLocator = await page1.locator('#item_NroDocumentoPax_1-error');
-  await expect(errorLocator).toBeVisible();
+})
 
-});
+test('compra nomral sin numero de documento', async({page})=>{
+  const navigate = new NavigationPage(page);
+  const newPage= await navigate.SearchTravel()
+  const form = new Form(newPage)
+
+  await form.CompletingForm("ivan", "castro", "", 
+  "usa", "Passport", "912345678", "prueba@gmail.com", "prueba@gmail.com", "female");
+
+  await form.verifyErrorMessage("nrodoc");
+
+})
+
+test('compra nomral sin correo', async({page})=>{
+  const navigate = new NavigationPage(page);
+  const newPage= await navigate.SearchTravel()
+  const form = new Form(newPage)
+
+  await form.CompletingForm("ivan", "castro", "123456789", 
+  "usa", "Passport", "912345678", "", "prueba@gmail.com", "female");
+
+  await form.verifyErrorMessage("correo");
+
+})
+
+test('compra nomral sin correo de confirmacion', async({page})=>{
+  const navigate = new NavigationPage(page);
+  const newPage= await navigate.SearchTravel()
+  const form = new Form(newPage)
+
+  await form.CompletingForm("ivan", "castro", "123456789", 
+  "usa", "Passport", "912345678", "", "prueba@gmail.com", "female");
+
+  await form.verifyErrorMessage("correoConfirm");
+
+})
 
 
 test('Compra por busqueda', async ({page}) =>{
+  const navigate = new NavigationPage(page);
+  const newPage= await navigate.CompraporBusqueda()
+  const form = new Form(newPage)
 
-  await page.getByLabel('FromCity of').selectOption('6022');
-  await page.getByLabel('ToArequipaMachuPicchuPuno').selectOption('6026');
-  await page.locator('#countParentsChildren').click();
-  await page.locator('#btnRemoveAdult').click();
-  await page.getByRole('link', { name: 'X', exact: true }).click();
-  const page1Promise = page.waitForEvent('popup');
-  await page.getByRole('button', { name: 'SEARCH' }).click();
-  const page1 = await page1Promise;
-  // await page1.getByRole('button', { name: '-' }).first().click();
-  // await page1.getByRole('button', {name: 'SEARCH'}).click()
-  await page1.locator('#servicio_ida').getByRole('cell', { name: 'PeruRail Expedition 33 ' }).click();
-  await page1.getByRole('cell', { name: 'PeruRail Vistadome Observatory 603 ' }).click();
-  await page1.getByRole('cell', { name: 'Belmond Hiram Bingham 12 W ' }).click();
-  await page1.getByRole('cell', { name: 'PeruRail Vistadome 84 ' }).click();
-  await page1.getByRole('button', { name: 'CONTINUE ' }).click();
-  await page1.locator('#item_NombrePax_1').click();
-  await page1.locator('#item_NombrePax_1').fill('ivan');
-  await page1.locator('#item_NombrePax_1').press('Tab');
-  await page1.locator('#item_ApellidoPax_1').fill('castro');
-  await page1.locator('#item_ApellidoPax_1').press('Tab');
-  await page1.getByLabel('Select').first().click();
-  await page1.locator('input[type="search"]').click();
-  await page1.locator('input[type="search"]').fill('usa');
-  await page1.getByRole('treeitem', { name: 'UNITED STATES OF A.| USA' }).click();
-  await page1.getByLabel('Identification document').click();
-  await page1.getByRole('treeitem', { name: 'Passport' }).click();
-  await page1.locator('#item_NroDocumentoPax_1').click();
-  await page1.locator('#item_NroDocumentoPax_1').fill('1234567789');
-  await page1.locator('#item_NacimientoPax_1').click();
-  await page1.getByRole('cell', { name: '«' }).click();
-  await page1.getByText('2001').click();
-  await page1.getByText('Jun').click();
-  await page1.getByRole('cell', { name: '21' }).click();
-  await page1.getByPlaceholder('345 678').click();
-  await page1.getByPlaceholder('345 678').fill('51902901382');
-  await page1.getByPlaceholder('345 678').press('Tab');
-  await page1.locator('#item_EmailPax_1').fill('prueba@gmail.com');
-  await page1.locator('#item_EmailPax_1').press('Alt+@');
-  await page1.locator('#item_EmailPax_Confirm_1').click();
-  await page1.locator('#item_EmailPax_Confirm_1').fill('prueba@gmail.com');
-  await page1.locator('#DatosComunicacion_1 > div:nth-child(4) > .form-group > .mt-checkbox > span').click();
-  await page1.getByRole('button', { name: 'CONTINUE ' }).click(); 
-  //await page.locator('div').filter({ hasText: '2 SUMMARY OF YOUR PURCHASE' }).nth(3).click();
+  await form.CompletingForm("ivan", "castro", "123456789", 
+  "usa", "Passport", "912345678", "prueba@gmail.com", "prueba@gmail.com", "female");
+  
 
 })
